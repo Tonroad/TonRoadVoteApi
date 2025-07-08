@@ -29,6 +29,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 // важное указание порта для Railway
-app.Urls.Add("http://*:8080");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://*:{port}");
+
 
 app.Run();
