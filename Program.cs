@@ -20,7 +20,12 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthorization();
 
 app.MapControllers();
