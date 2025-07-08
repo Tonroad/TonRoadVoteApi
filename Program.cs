@@ -8,28 +8,32 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// PostgreSQL (подключение из переменной окружения Railway)
+// PostgreSQL
 builder.Services.AddDbContext<AppDbContext>(options =>
-	options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Swagger (доступен всегда)
-app.UseSwagger();
-app.UseSwaggerUI();
+// Миграции при запуске
+PrepDb.PrepPopulation(app);
 
-// Разрешаем HTTPS-редирект (не мешает Railway)
-app.UseHttpsRedirection();
+// Middleware pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// ❌ Удаляем этот редирект, Railway и так обрабатывает HTTPS
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Указываем порт для Railway
+// Railway порт
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://*:{port}");
 
-// ВАЖНО: применяем миграции автоматически
-PrepDb.PrepPopulation(app);
-
 app.Run();
+
