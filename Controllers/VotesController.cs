@@ -16,7 +16,7 @@ namespace TonRoadVoteApi.Controllers
             _context = context;
         }
 
-        // GET /
+        // Проверка root
         [HttpGet("/")]
         public IActionResult Index()
         {
