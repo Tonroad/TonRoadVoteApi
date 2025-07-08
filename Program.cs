@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Применение миграций базы данных перед запуском сервиса
-PrepDb.PrepPopulation(app);
+//PrepDb.PrepPopulation(app);
 
 app.UseSwagger();
 app.UseSwaggerUI();
